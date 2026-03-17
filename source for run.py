@@ -28,7 +28,7 @@ class CursorFollower(QLabel):
         self.setCursor(Qt.BlankCursor)
         self.resize(WINDOW_WIDTH, WINDOW_HEIGHT)
 
-        self.setWindowTitle("lucario on curser window")
+        self.setWindowTitle("Lucario on cursor")
 
         self.idle_pixmap = QPixmap(IDLE_IMAGE).scaled(
             WINDOW_WIDTH, WINDOW_HEIGHT,
@@ -64,18 +64,21 @@ class CursorFollower(QLabel):
 
     def update_all(self):
         self.frame_count += 1
-
+        
         pos = QCursor.pos()
         self.move(
             pos.x() - WINDOW_WIDTH // 2,
             pos.y() - WINDOW_HEIGHT // 2
         )
-
+        
         if self.is_mouse_pressed():
             self.setPixmap(self.click_pixmap)
         else:
             self.setPixmap(self.idle_pixmap)
-
+        if self.is_cursor_visible():
+            self.show()
+        else:
+            self.hide()
         if self.frame_count % 5 == 0:
             self.raise_()
 
@@ -85,6 +88,21 @@ class CursorFollower(QLabel):
             user32.GetAsyncKeyState(VK_LBUTTON) & 0x8000 or
             user32.GetAsyncKeyState(VK_RBUTTON) & 0x8000
         )
+
+    @staticmethod
+    def is_cursor_visible():
+        class CURSORINFO(ctypes.Structure):
+            _fields_ = [
+                ("cbSize", ctypes.c_uint),
+                ("flags", ctypes.c_uint),
+                ("hCursor", ctypes.c_void_p),
+                ("ptScreenPos", ctypes.c_long * 2)
+            ]
+
+        ci = CURSORINFO()
+        ci.cbSize = ctypes.sizeof(CURSORINFO)
+        ctypes.windll.user32.GetCursorInfo(ctypes.byref(ci))
+        return bool(ci.flags & 1)
 
 follower = CursorFollower()
 sys.exit(app.exec_())
