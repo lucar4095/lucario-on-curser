@@ -88,7 +88,7 @@ class CursorFollower(QLabel):
             user32.GetAsyncKeyState(VK_LBUTTON) & 0x8000 or
             user32.GetAsyncKeyState(VK_RBUTTON) & 0x8000
         )
-
+        
     @staticmethod
     def is_cursor_visible():
         class CURSORINFO(ctypes.Structure):
