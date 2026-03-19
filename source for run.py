@@ -25,10 +25,9 @@ class CursorFollower(QLabel):
             Qt.Tool
         )
         self.setAttribute(Qt.WA_TranslucentBackground)
-        self.setCursor(Qt.BlankCursor)
         self.resize(WINDOW_WIDTH, WINDOW_HEIGHT)
 
-        self.setWindowTitle("Lucario on cursor")
+        self.setWindowTitle("lucario on cursor")
 
         self.idle_pixmap = QPixmap(IDLE_IMAGE).scaled(
             WINDOW_WIDTH, WINDOW_HEIGHT,
@@ -88,7 +87,7 @@ class CursorFollower(QLabel):
             user32.GetAsyncKeyState(VK_LBUTTON) & 0x8000 or
             user32.GetAsyncKeyState(VK_RBUTTON) & 0x8000
         )
-        
+
     @staticmethod
     def is_cursor_visible():
         class CURSORINFO(ctypes.Structure):
